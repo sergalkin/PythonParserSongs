@@ -1,5 +1,7 @@
 import os
 import re
+import string
+#TO DO: Сделать проверку на тип файла
 
 class songNameFixer(object):
 
@@ -45,6 +47,21 @@ class songNameFixer(object):
 		'LYRICS'
 	]
 
+	# Список аудио форматов
+	audioFormats = [
+		'.AAC',	
+		'.FLAC', 
+		'.MP3' , 
+		'.OGG', 
+		'.MP4', 
+		'.WAV', 
+		'.WMA', 
+		'.LA', 
+		'.M4A', 
+		'.MID',
+		'.MIDI'
+	]
+
 	def __init__(self, dir_path): # Конструктор с указанием пути к файлам
 		self.dir_path = dir_path
 		os.chdir(dir_path)
@@ -56,22 +73,23 @@ class songNameFixer(object):
 	def DeleteParasites(self):
 		for f in os.listdir():
 			file_name, file_ext = os.path.splitext(f)
-			for word in self.keyWatermarks:
-				file_name = re.sub(word, '',file_name)
-			file_name = re.sub(r'^(\_)|(\_+$)','',file_name) # Удаление нижних подчеркиваний вначале и конце строки 
-			file_name = re.sub(r'^(\d+\s+\-+\s+)|^(\d+\.)|^(\d+-)|^(\d+\s+)','',file_name) # Удаление цифр в начале строки
-			file_name = re.sub(r'(\(\))|(\[\])|(\(\d+\s+kbps\))','',file_name) # Удаление пустых скобок и Киллобайтов
-			file_name = re.sub(r'[^(\w+)|\!|\(\)|\[\]\s.-]','',file_name) # Удаление черепов и т.п.
-			file_name = re.sub(r'(OP+\d+)|(^\d+\_|\_)',' ', file_name) # Удаление нижних подчеркиваний
-			file_name = re.sub(r'(\s{2,})', ' ', file_name) # Удаление 2ух и более пробелов
-			file_name = re.sub(r'(\-{2,})', '-', file_name) # Удаление 2ух и более -
-			file_name = re.sub(r'^(\-)|(\-$)','', file_name) # Удаление - в начале строки и конце строки
-			file_name = file_name.strip()
-			new_name = '{}{}'.format(file_name,file_ext)
-			try:
-				os.rename(f,new_name)
-			except FileExistsError as e:
-				os.remove(f)
+			if(file_ext.upper() in self.audioFormats):
+				for word in self.keyWatermarks:
+					file_name = re.sub(word, '',file_name)
+				file_name = re.sub(r'^(\_)|(\_+$)','',file_name) # Удаление нижних подчеркиваний вначале и конце строки 
+				file_name = re.sub(r'^(\d+\s+\-+\s+)|^(\d+\.)|^(\d+-)|^(\d+\s+)','',file_name) # Удаление цифр в начале строки
+				file_name = re.sub(r'(\(\))|(\[\])|(\(\d+\s+kbps\))','',file_name) # Удаление пустых скобок и Киллобайтов
+				file_name = re.sub(r'[^(\w+)|\!|\(\)|\[\]\s.-]','',file_name) # Удаление черепов и т.п.
+				file_name = re.sub(r'(OP+\d+)|(^\d+\_|\_)',' ', file_name) # Удаление нижних подчеркиваний
+				file_name = re.sub(r'(\s{2,})', ' ', file_name) # Удаление 2ух и более пробелов
+				file_name = re.sub(r'(\-{2,})', '-', file_name) # Удаление 2ух и более -
+				file_name = re.sub(r'^(\-)|(\-$)','', file_name) # Удаление - в начале строки и конце строки
+				file_name = file_name.strip()
+				new_name = '{}{}'.format(file_name,file_ext)
+				try:
+					os.rename(f,new_name)
+				except FileExistsError as e:
+					os.remove(f)
 			
 	def stripNumbersInMiddle(self): # Удаление цифр в середине песни
 		for f in os.listdir():
@@ -98,4 +116,3 @@ class songNameFixer(object):
 
 			except Exception as e:
 				pass
-				
