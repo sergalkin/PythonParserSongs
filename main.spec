@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['E:\\PytScript'],
+             pathex=['E:\\PythonParserSongs'],
              binaries=[],
              datas=[],
              hiddenimports=[],
