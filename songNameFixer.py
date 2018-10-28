@@ -3,7 +3,7 @@ import re
 import string
 #TO DO: Сделать проверку на тип файла
 
-class songNameFixer(object):
+class SongNameFixer(object):
 
 	# Список слов-паразитов от сайтов для скачивания музыки
 	keyWatermarks = [
@@ -44,7 +44,8 @@ class songNameFixer(object):
 		'FVOst.net',
 		'Original PV',
 		'mp3davalka',
-		'LYRICS'
+		'LYRICS',
+		'savemp3.net'
 	]
 
 	# Список аудио форматов
@@ -62,18 +63,25 @@ class songNameFixer(object):
 		'.MIDI'
 	]
 
-	def __init__(self, dir_path): # Конструктор с указанием пути к файлам
-		self.dir_path = dir_path
-		os.chdir(dir_path)
+	def __init__(self, dir_path=None): # Конструктор с указанием пути к файлам
+		if(dir_path != None):
+			self.dir_path = dir_path
+			os.chdir(dir_path)
+
 
 	def stripAll(self): # Вызов всех методов для чистки имени файла
-		self.DeleteParasites()
-		self.stripNumbersInMiddle()
+		self.__DeleteParasites()
+		self.__stripNumbersInMiddle()
 
-	def DeleteParasites(self):
+	def audioFormatChecker(self, file_ext):
+		if(file_ext.upper() in self.audioFormats):
+			return True
+		return False
+
+	def __DeleteParasites(self):
 		for f in os.listdir():
 			file_name, file_ext = os.path.splitext(f)
-			if(file_ext.upper() in self.audioFormats):
+			if(self.audioFormatChecker(file_ext)):
 				for word in self.keyWatermarks:
 					file_name = re.sub(word, '',file_name)
 				file_name = re.sub(r'^(\_)|(\_+$)','',file_name) # Удаление нижних подчеркиваний вначале и конце строки 
@@ -91,7 +99,7 @@ class songNameFixer(object):
 				except FileExistsError as e:
 					os.remove(f)
 			
-	def stripNumbersInMiddle(self): # Удаление цифр в середине песни
+	def __stripNumbersInMiddle(self): # Удаление цифр в середине песни
 		for f in os.listdir():
 			file_name, file_ext = os.path.splitext(f)
 			try:
@@ -108,7 +116,6 @@ class songNameFixer(object):
 				lenAfter = len(f_title)
 				f_title = '-'.join(f_title[0:lenAfter])
 				new_name = '{}{}'.format(f_title,file_ext)
-				print(new_name)
 				try:
 					os.rename(f,new_name)
 				except FileExistsError as e:
@@ -116,3 +123,4 @@ class songNameFixer(object):
 
 			except Exception as e:
 				pass
+

@@ -125,6 +125,16 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusBar)
 
         self.retranslateUi(MainWindow)
+
+        self.setWindowFlags(
+            QtCore.Qt.Window |
+            QtCore.Qt.CustomizeWindowHint |
+            QtCore.Qt.WindowTitleHint |
+            QtCore.Qt.WindowStaysOnTopHint |
+            QtCore.Qt.WindowMinimizeButtonHint |
+            QtCore.Qt.WindowCloseButtonHint |
+            QtCore.Qt.Window
+        )
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -133,4 +143,3 @@ class Ui_MainWindow(object):
         self.labelBefore.setText(_translate("MainWindow", "Список песен до редактирования"))
         self.labelAfter.setText(_translate("MainWindow", "Список песен после редактирования"))
         self.btnBrowse.setText(_translate("MainWindow", "Выбрать папку"))
-
