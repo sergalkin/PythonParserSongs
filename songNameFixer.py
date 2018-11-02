@@ -1,6 +1,7 @@
 import os
 import re
 import string
+import html
 
 class SongNameFixer(object):
 
@@ -84,7 +85,7 @@ class SongNameFixer(object):
 			if(self.audioFormatChecker(file_ext)):
 				for word in self.keyWatermarks:
 					file_name = re.sub(word, '',file_name)
-				file_name = re.sub(r'(&quot;)|(&lt;)|(&gt;)|(&amp;)','',file_name) # Удаление html тега
+				file_name = html.unescape(file_name) # Преобразование html сущностей
 				file_name = re.sub(r'^(\_)|(\_+$)','',file_name) # Удаление нижних подчеркиваний вначале и конце строки 
 				file_name = re.sub(r'^(\d+\s+\-+\s+)|^(\d+\.)|^(\d+-)|^(\d+\s+)','',file_name) # Удаление цифр в начале строки
 				file_name = re.sub(r'(\(\))|(\[\])|(\(\d+\s+kbps\))','',file_name) # Удаление пустых скобок и Киллобайтов
