@@ -46,7 +46,9 @@ class SongNameFixer(object):
 		'mp3davalka',
 		'LYRICS',
 		'savemp3.net',
-		'Official Lyric Video'
+		'Official Lyric Video',
+		'ENDING',
+		'OPENING'
 	]
 
 	# Список аудио форматов
@@ -86,6 +88,7 @@ class SongNameFixer(object):
 				for word in self.keyWatermarks:
 					file_name = re.sub(word, '',file_name)
 				file_name = html.unescape(file_name) # Преобразование html сущностей
+				file_name = re.sub(r'(\+)|(\d+$)',' ',file_name) # Удаление + цифры вконце
 				file_name = re.sub(r'^(\_)|(\_+$)','',file_name) # Удаление нижних подчеркиваний вначале и конце строки 
 				file_name = re.sub(r'^(\d+\s+\-+\s+)|^(\d+\.)|^(\d+-)|^(\d+\s+)','',file_name) # Удаление цифр в начале строки
 				file_name = re.sub(r'(\(\))|(\[\])|(\(\d+\s+kbps\))','',file_name) # Удаление пустых скобок и Киллобайтов
